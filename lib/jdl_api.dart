@@ -8,22 +8,19 @@ class JDLDefaultApi implements JDLApi {
   @override
   String contentType;
   @override
-  Map<String, dynamic> queryParameters = {
-    'cityname': '北京',
-    'key': '1acc945fc895dc3eec10aa5a3c4f2151'
-  };
+  Map<String, dynamic> queryParameters;
 
   @override
   Map<String, dynamic> headers;
 
   @override
-  String host = 'http://v.juhe.cn';
+  String host = 'http://apis.juhe.cn/simpleWeather/query';
 
   @override
   JDLRequestMethod method = JDLRequestMethod.GET;
 
   @override
-  String path = '/weather/index';
+  String path;
 
   @override
   int receiveTimeout = 5000;

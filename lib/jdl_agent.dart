@@ -5,21 +5,25 @@ import 'jdl_api.dart';
 typedef JDLNetworkProgressCallback = void Function(int count, int total);
 
 class JDLNetworkAgent {
-  static final Dio _dio = Dio(BaseOptions());
+   final Dio _dio = Dio(BaseOptions());
+   final LogInterceptor _logInterceptor = LogInterceptor(responseBody: true,requestBody: true);
 
-  static addInterceptor(Interceptor interceptor){
+  void addInterceptor(Interceptor interceptor){
     if(interceptor == null) return;
     _dio.interceptors.add(interceptor);
   }
 
-  static openLog(){
-    _dio.interceptors.add(LogInterceptor(responseBody: true,requestBody: true));
+   void closeLog(){
+    _dio.interceptors.remove(_logInterceptor);
   }
-  static removeInterceptor(Interceptor interceptor){
+   void openLog(){
+    _dio.interceptors.add(_logInterceptor);
+  }
+   void removeInterceptor(Interceptor interceptor){
     if(interceptor == null) return;
     _dio.interceptors.remove(interceptor);
   }
-  static Future<Response> request(JDLApi api,
+    Future<Response> request(JDLApi api,
       {JDLNetworkProgressCallback onSendProgress,
       JDLNetworkProgressCallback onReceiveProgress,CancelToken cancelToken}) async {
     _resetBaseOptions(api);
@@ -30,7 +34,7 @@ class JDLNetworkAgent {
         onSendProgress: onSendProgress,cancelToken: cancelToken);
   }
 
-  static String _coverMethod(JDLRequestMethod method) {
+    String _coverMethod(JDLRequestMethod method) {
     if (method == JDLRequestMethod.GET) {
       return 'get';
     }
@@ -53,7 +57,7 @@ class JDLNetworkAgent {
     return 'get';
   }
 
-  static ResponseType _coverResponseType(JDLResponseType type) {
+    ResponseType _coverResponseType(JDLResponseType type) {
     if (type == JDLResponseType.JSON) {
       return ResponseType.json;
     }
@@ -66,7 +70,7 @@ class JDLNetworkAgent {
     return ResponseType.bytes;
   }
 
-  static _resetBaseOptions(JDLApi api) {
+   void _resetBaseOptions(JDLApi api) {
     if (api.method != null) {
       _dio.options.method = _coverMethod(api.method);
     }
@@ -92,7 +96,7 @@ class JDLNetworkAgent {
       _dio.options.contentType = api.contentType;
     }
   }
-  static _resetTransformer(JDLApi api) {
+    void _resetTransformer(JDLApi api) {
 
     if (api.transformer != null){
       _dio.transformer = api.transformer;
